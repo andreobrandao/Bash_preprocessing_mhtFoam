@@ -1,0 +1,139 @@
+/*--------------------------------*- C++ -*----------------------------------*|
+| =========                 |                                                 |
+| ||      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  ||    /   O peration     | Version:  2312                                  |
+|   ||  /    A nd           | Website:  www.openfoam.com                      |
+|    ||/     M anipulation  |                                                 |
+|*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    arch        "LSB;label=32;scalar=64";
+    class       volScalarField;
+    location    "0";
+    object      corr;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField #codeStream
+{
+        codeInclude
+        #{
+                #include "fvCFD.H"
+                #include "Ostream.H"
+        #};
+
+        codeOptions
+        #{
+                -I$(LIB_SRC)/finiteVolume/lnInclude \
+                -I$(LIB_SRC)/meshTools/lnInclude 
+        #};
+
+        codeLibs
+        #{
+                -lmeshTools \
+                -lfiniteVolume 
+        #};
+        code
+        #{
+
+        const IOdictionary& d = static_cast<const IOdictionary&>(dict);
+        const fvMesh& mesh = refCast<const fvMesh>(d.db());
+        scalarField corr(mesh.nCells(), 0.);
+	       
+        // fluid magnetic on first tumor 1
+        scalar raiot1 = 0.00287;
+        scalar x1 = 0.045;
+        scalar y1 = 0.045;
+        // fluid magnetic on first tumor 2
+        scalar raiot2 = 0.00287;
+        scalar ee2 = 0;
+        scalar be2 = raiot2*pow((1-pow(ee2,2)),0.25);
+        scalar ae2 = pow(pow(be2,2)*(pow(1-pow(ee2,2),-1)),0.5);
+        scalar x2 = 0.030;
+        scalar y2 = 0.030;
+        // fluid magnetic on first tumor 3
+        scalar raiot3 = 0.00287;
+        scalar ee3 = 0;
+        scalar be3 = raiot3*pow((1-pow(ee3,2)),0.25);
+        scalar ae3 = pow(pow(be3,2)*(pow(1-pow(ee3,2),-1)),0.5);
+        scalar x3 = 0.060;
+        scalar y3 = 0.060;
+        // fluid magnetic on first tumor 4
+        scalar raiot4 = 0.00287;
+        scalar ee4 = 0;
+        scalar be4 = raiot4*pow((1-pow(ee4,2)),0.25);
+        scalar ae4 = pow(pow(be4,2)*(pow(1-pow(ee4,2),-1)),0.5);
+        scalar x4 = 0.030;
+        scalar y4 = 0.060;
+        // fluid magnetic on first tumor 5
+        scalar raiot5 = 0.00287;
+        scalar ee5 = 0;
+        scalar be5 = raiot5*pow((1-pow(ee5,2)),0.25);
+        scalar ae5 = pow(pow(be5,2)*(pow(1-pow(ee5,2),-1)),0.5);
+        scalar x5 = 0.060;
+        scalar y5 = 0.030;
+	       
+        forAll(corr, i)
+        {
+                const scalar x = mesh.C()[i][0];
+                const scalar y = mesh.C()[i][1];
+                const scalar z = mesh.C()[i][2];
+                if ( pow(y-y1,2) <= pow(raiot1,2) - pow(x-x1,2) )
+                {
+                        corr[i] = 1.;
+                }
+                if ( pow(y-y2,2) <= ((1 - pow(x-x2,2)/pow(ae2,2) )*pow(be2,2)) )
+                {
+                        corr[i] = 1.;
+                }
+                if ( pow(y-y3,2) <= ((1 - pow(x-x3,2)/pow(ae3,2) )*pow(be3,2)) )
+                {
+                        corr[i] = 1.;
+                }
+                if ( pow(y-y4,2) <= ((1 - pow(x-x4,2)/pow(ae4,2) )*pow(be4,2)) )
+                {
+                        corr[i] = 1.;
+                }
+                if ( pow(y-y5,2) <= ((1 - pow(x-x5,2)/pow(ae5,2) )*pow(be5,2)) )
+                {
+                        corr[i] = 1.;
+                }
+        }
+        corr.writeEntry("", os);
+
+        #};
+};
+
+boundaryField
+{
+    leftWall
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    rightWall
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    lowerWall
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    upperWall
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    defaultFaces
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //
