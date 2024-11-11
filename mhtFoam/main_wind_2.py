@@ -86,8 +86,8 @@ v 1.0"""
        
         self.tumor["command"] = self.tumors
         self.tumor.pack(side=RIGHT)
-        # Dicionário para armazenar os dados
-        self.data = {}
+        
+        
     def leitura_ControlDict(self):
         """
         Função responsável pela construção da parte relacionada ao controlDict
@@ -114,9 +114,18 @@ v 1.0"""
         #self.endtime["width"] = 30
         #self.endtime["font"] = self.fontePadrao
         #self.endtime.pack(side=LEFT)
+        self.data={}
         
         endtime = simpledialog.askfloat("Parâmetros temporais", "Tempo final:", minvalue=0, maxvalue=1000)
         timestep = simpledialog.askfloat("Parâmetros temporais", "Time step:", minvalue=0, maxvalue=1000)
+        if endtime is not None:
+            self.data["endtime"] = endtime
+        if timestep is not None:
+            self.data["timestep"] = timestep
+        with open("inputDict_controlDict.json", "w") as arquivo:
+            json.dump(self.data, arquivo, indent=4)
+            
+      
         
         # Informação exibida ao lado do campo para entrada do time step
         
@@ -177,7 +186,7 @@ v 1.0"""
         # Informação exibida ao lado do campo para entrada de xmax
         
         self.xmaxLabel = Label(self.segundo2Container,text="size of the domain in x direction (m): ", font=self.fontePadrao).pack(side=LEFT)
-        # Campo para entrada de chi0
+        # Campo para entrada de xmax
         self.xmax = Entry(self.segundo2Container)
         self.xmax["width"] = 30
         self.xmax["font"] = self.fontePadrao
@@ -186,7 +195,7 @@ v 1.0"""
         # Informação exibida ao lado do campo para entrada de ymax
         
         self.ymaxLabel = Label(self.terceiro2Container, text="size of the domain in y direction (m): ", font=self.fontePadrao).pack(side=LEFT)
-        # Campo para entrada de beta_m
+        # Campo para entrada de ymax
         self.ymax = Entry(self.terceiro2Container)
         self.ymax["width"] = 30
         self.ymax["font"] = self.fontePadrao
@@ -195,7 +204,7 @@ v 1.0"""
         # Informação exibida ao lado do campo para entrada de zmax
         
         self.zmaxLabel = Label(self.quarto2Container, text="size of the domain in z direction (m): ", font=self.fontePadrao).pack(side=LEFT)
-        # Campo para entrada de Hmax
+        # Campo para entrada de zmax
         self.zmax = Entry(self.quarto2Container)
         self.zmax["width"] = 30
         self.zmax["font"] = self.fontePadrao
@@ -204,7 +213,7 @@ v 1.0"""
         # Informação exibida ao lado do campo para entrada de xnode
         
         self.xnodeLabel = Label(self.quinto2Container, text="Amount of nodes in the x direction: ", font=self.fontePadrao).pack(side=LEFT)
-        # Campo para entrada de mag_height
+        # Campo para entrada de xnode
         self.xnode = Entry(self.quinto2Container)
         self.xnode["width"] = 30
         self.xnode["font"] = self.fontePadrao
