@@ -9,18 +9,17 @@ class Main_wind:
         self.root_1.title("mhtFoam")
         self.fontePadrao = ("Adobe Myungjo Std M", "11")
         self.fonteBotoes = ("Arial", "10")
-        #self.root_1["pady"]=40
-        #self.root_1["padx"]=40
         
+        largura_tela_1 = self.root_1.winfo_screenwidth()
+        altura_tela_1 = self.root_1.winfo_screenheight()
+        self.largura_tela = largura_tela_1//4
+        self.altura_tela = altura_tela_1//3
+        self.root_1.geometry(f'550x300+{self.largura_tela}+{self.altura_tela}')
     def interface(self):
         self.botoes_main_wind()
         self.define_titulo()
-        #self.leitura_blockMeshDict()
-        #self.gerar_jsonIntf_malha()
-        #self.parametro_window()
-        
-        
-        
+        self.tumor_data_entries = {}
+        self.data_t = {"tumors": []}
     def define_titulo(self):
         """
         Função responsável pela construção da parte relativa ao título na interface
@@ -38,7 +37,6 @@ do domínio de cáculo/malha e com as informações dos tumores
 através dos botões acima.
 
 v 1.0"""
-
 
         # Atribuição do título dentro da janela (1a informação exibida)
         self.titulo = Label(self.primeiroContainer, text=texto1)
@@ -63,7 +61,6 @@ v 1.0"""
        
         self.malha["command"] = self.leitura_blockMeshDict
         self.malha.pack(side=LEFT)
-        #self.leitura_blockMeshDict()
         
         # Botão tempo
         
@@ -92,28 +89,6 @@ v 1.0"""
         """
         Função responsável pela construção da parte relacionada ao controlDict
         """
-        #parametro_window2 = tk.Toplevel(root_1)
-        #parametro_window2.title("Parâmetros temporais")
-        # Construção do container para a entrada do tempo final desejado
-        #self.segundo3Container = Frame(parametro_window2)
-        #self.segundo3Container["padx"] = 20
-        #self.segundo3Container["pady"] = 10
-        #self.segundo3Container.pack()
-        
-        # Construção do container para a entrada do time step desejado
-        #self.terceiro3Container = Frame(parametro_window2)
-        #self.terceiro3Container["padx"] = 20
-        #self.terceiro3Container["pady"] = 10
-        #self.terceiro3Container.pack()
-
-        # Informação exibida ao lado do campo para entrada do tempo final
-        
-        #self.endtimeLabel = Label(self.segundo3Container,text="Tempo final: ", font=self.fontePadrao).pack(side=LEFT)
-        # Campo para entrada do tempo final
-        #self.endtime = Entry(self.segundo3Container)
-        #self.endtime["width"] = 30
-        #self.endtime["font"] = self.fontePadrao
-        #self.endtime.pack(side=LEFT)
         self.data={}
         
         endtime = simpledialog.askfloat("Parâmetros temporais", "Tempo final:", minvalue=0, maxvalue=1000)
@@ -125,58 +100,48 @@ v 1.0"""
         with open("inputDict_controlDict.json", "w") as arquivo:
             json.dump(self.data, arquivo, indent=4)
             
-      
-        
-        # Informação exibida ao lado do campo para entrada do time step
-        
-        #self.timestepLabel = Label(self.terceiro3Container,text="Time step: ", font=self.fontePadrao).pack(side=LEFT)
-        # Campo para entrada do time step
-        #self.timestep = Entry(self.terceiro3Container)
-        #self.timestep["width"] = 30
-        #self.timestep["font"] = self.fontePadrao
-        #self.timestep.pack(side=LEFT)
-    
+        messagebox.showinfo("Confirmação", "Parâmetros temporais salvos com sucesso.")
         
     def leitura_blockMeshDict(self):
-        #self.gerar_jsonIntf_malha()
+        
         """
         Função responsável pela construção da parte relacionada ao blockMeshDict
         """
-        parametro_window = tk.Toplevel(root_1)
-        parametro_window.title("parâmetros do Domínio de Cálculo")
+        self.parametro_window = tk.Toplevel(root_1)
+        self.parametro_window.title("parâmetros do Domínio de Cálculo")
         
         # Construção do container para a entrada de xmax
-        self.segundo2Container = Frame(parametro_window)
+        self.segundo2Container = Frame(self.parametro_window)
         self.segundo2Container["padx"] = 20
         self.segundo2Container["pady"] = 10
         self.segundo2Container.pack()
         # Construção do container para a entrada de ymax
-        self.terceiro2Container = Frame(parametro_window)
+        self.terceiro2Container = Frame(self.parametro_window)
         self.terceiro2Container["pady"] = 10
         self.terceiro2Container["padx"] = 20
         self.terceiro2Container.pack()
         # Construção do container para a entrada de zmax
-        self.quarto2Container = Frame(parametro_window)
+        self.quarto2Container = Frame(self.parametro_window)
         self.quarto2Container["padx"] = 20
         self.quarto2Container["pady"] = 10
         self.quarto2Container.pack()
         # Construção do container para a entrada de xnode
-        self.quinto2Container = Frame(parametro_window)
+        self.quinto2Container = Frame(self.parametro_window)
         self.quinto2Container["padx"] = 20
         self.quinto2Container["pady"] = 10
         self.quinto2Container.pack()
         # Construção do container para a entrada de ynode
-        self.sexto2Container = Frame(parametro_window)
+        self.sexto2Container = Frame(self.parametro_window)
         self.sexto2Container["padx"] = 20
         self.sexto2Container["pady"] = 10
         self.sexto2Container.pack()
         # Construção do container para a entrada de znode
-        self.setimo2Container = Frame(parametro_window)
+        self.setimo2Container = Frame(self.parametro_window)
         self.setimo2Container["padx"] = 20
         self.setimo2Container["pady"] = 10
         self.setimo2Container.pack()
         # Construção do container para a entrada de endTime
-        self.oitavo2Container = Frame(parametro_window)
+        self.oitavo2Container = Frame(self.parametro_window)
         self.oitavo2Container["padx"] = 20
         self.oitavo2Container["pady"] = 10
         self.oitavo2Container.pack()
@@ -248,7 +213,7 @@ v 1.0"""
         
     # Blocos de geração de arquivos Jason
    
-
+        
     def gera_json_malha(self):
         import json
         
@@ -265,21 +230,149 @@ v 1.0"""
         
         json_string = json.dumps(inputDict_blockMeshDict, indent=4)
         self.outJson="inputDict_blockMeshDict.json"
+        
         with open(self.outJson,"w") as f:
             f.write(json_string)
         f.close()
-
+        messagebox.showinfo("Confirmação", "Parâmetros da malha salvos com sucesso.")
+        
+        self.parametro_window.destroy()
+        
+    #Aqui abre as janelas para coleta dos parâmetros dos tumores
+        
     def tumors(self):
-        #parametro_window3 = tk.Toplevel(root_1)
-        #parametro_window3.title("Parâmetros dos tumores")
-        
-        # Construção do container para a entrada de xmax
-        
+        #self.data_t = {}
+        #self.data_t['user_data'] = ""
+        #self.data_t['tumors'] = []
+        self.tumor_windows = []
         tumor_count = simpledialog.askinteger("Parâmetros dos tumores", "How many tumors?")
-        #tumor_count.geometry("300x150")
-    
-    
+        #if tumor_count is not None:
+            #self.data_t['tumors'] = [None] * tumor_count
+        self.open_tumor_data_screens(tumor_count)
+        
+    def open_tumor_data_screens(self, tumor_count):
+        for i in range(0,tumor_count):
+            self.largura_tela2=self.largura_tela+(i-1)*80
+            self.altura_tela2=self.altura_tela+(i-1)*100
+            self.collect_tumor_data(i,tumor_count)
+        #self.tumor_windows = []
+        
 
+    def collect_tumor_data(self, index, tumor_count):
+        
+        
+        self.tumor_data_entries[index] = {}
+        
+        self.tumor_window = tk.Toplevel(self.root_1)
+        self.tumor_window.geometry(f'300x370+{self.largura_tela2}+{self.altura_tela2}')
+        self.tumor_window.title(f"Tumor {index + 1} Data")
+        self.tumor_windows.append(self.tumor_window)
+        #abre os containers
+        self.primeiro5Container = Frame(self.tumor_window)
+        self.primeiro5Container["padx"] = 20
+        self.primeiro5Container["pady"] = 10
+        self.primeiro5Container.pack()
+        
+        self.segundo5Container = Frame(self.tumor_window)
+        self.segundo5Container["padx"] = 20
+        self.segundo5Container["pady"] = 10
+        self.segundo5Container.pack()
+        
+        self.terceiro5Container = Frame(self.tumor_window)
+        self.terceiro5Container["padx"] = 20
+        self.terceiro5Container["pady"] = 10
+        self.terceiro5Container.pack()
+        
+        self.quarto5Container = Frame(self.tumor_window)
+        self.quarto5Container["padx"] = 20
+        self.quarto5Container["pady"] = 10
+        self.quarto5Container.pack()
+        
+        self.quinto5Container = Frame(self.tumor_window)
+        self.quinto5Container["padx"] = 20
+        self.quinto5Container["pady"] = 10
+        self.quinto5Container.pack()
+        
+        self.sexto5Container = Frame(self.tumor_window)
+        self.sexto5Container["padx"] = 20
+        self.sexto5Container["pady"] = 50
+        self.sexto5Container.pack()
+        
+        
+        # Aqui fica as abas onde serão coletadas os dados do usuário
+        # raio,excentricidade,posição x, posição y, inclinação em graus
+        
+        self.radiusLabel = Label(self.primeiro5Container,text="Equivalent radius: ", font=self.fontePadrao).pack(side=LEFT)
+        # Campo para entrada do raio
+        self.radius = Entry(self.primeiro5Container)
+        self.radius["width"] = 30
+        self.radius["font"] = self.fontePadrao
+        self.radius.pack(side=LEFT)
+        self.tumor_data_entries[index]["radius"] = self.radius
+        
+        self.eccenLabel = Label(self.segundo5Container,text="eccentricity: ", font=self.fontePadrao).pack(side=LEFT)
+        # Campo para entrada da excentricidade
+        self.eccen = Entry(self.segundo5Container)
+        self.eccen["width"] = 30
+        self.eccen["font"] = self.fontePadrao
+        self.eccen.pack(side=RIGHT)
+        self.tumor_data_entries[index]["eccen"] = self.eccen
+        
+        self.posxLabel = Label(self.terceiro5Container,text="x position of the tumor: ", font=self.fontePadrao).pack(side=LEFT)
+        # Campo para entrada da posição x
+        self.posx = Entry(self.terceiro5Container)
+        self.posx["width"] = 30
+        self.posx["font"] = self.fontePadrao
+        self.posx.pack(side=LEFT)
+        self.tumor_data_entries[index]["posx"] = self.posx
+        
+        self.posyLabel = Label(self.quarto5Container,text="y position of the tumor: ", font=self.fontePadrao).pack(side=LEFT)
+        # Campo para entrada da posição y
+        self.posy = Entry(self.quarto5Container)
+        self.posy["width"] = 30
+        self.posy["font"] = self.fontePadrao
+        self.posy.pack(side=LEFT)
+        self.tumor_data_entries[index]["posy"] = self.posy
+        
+        self.inclinationLabel = Label(self.quinto5Container,text="Inclination of the tumor (º): ", font=self.fontePadrao).pack(side=LEFT)
+        # Campo para entrada da inclinação
+        self.inclination = Entry(self.quinto5Container)
+        self.inclination["width"] = 30
+        self.inclination["font"] = self.fontePadrao
+        self.inclination.pack(side=LEFT)
+        self.tumor_data_entries[index]["inclination"] = self.inclination
+        
+        self.autenticar_tumor = Button(self.sexto5Container)
+        self.autenticar_tumor["text"] = "Gerar Json"
+        self.autenticar_tumor["font"] = self.fonteBotoes
+        self.autenticar_tumor["width"] = 12
+        # Chamada da função utilizada para geraçao do json
+ 
+        self.autenticar_tumor["command"] = lambda win=self.tumor_window, idx=index, total=tumor_count: self.gera_json_tumor(win, idx, total)
+        self.autenticar_tumor.pack(side=LEFT)
+
+    def gera_json_tumor(self,window,index,tumor_count):
+        import json
+        
+        indexx=index+1
+        inputDict_ID = {
+            f"radius_{indexx}": self.tumor_data_entries[index]["radius"].get(),
+            f"eccen_{indexx}": self.tumor_data_entries[index]["eccen"].get(),
+            f"posx_{indexx}": self.tumor_data_entries[index]["posx"].get(),
+            f"posy_{indexx}": self.tumor_data_entries[index]["posy"].get(),
+            f"inclination_{indexx}": self.tumor_data_entries[index]["inclination"].get()
+        }
+        
+        self.data_t["tumors"].append(inputDict_ID)
+        
+        json_string = json.dumps(inputDict_ID, indent=4)
+        
+        if len(self.data_t["tumors"]) == tumor_count:
+            with open("inputDict_ID.json", "w") as f:
+                json.dump(self.data_t, f, indent=4)
+            messagebox.showinfo("Confirmação", "Parâmetros de todos os tumores salvos com sucesso.")
+            
+        window.destroy()
 # Inicializa a interface gráfica
 root_1 = tk.Tk()
 app = Main_wind(root_1)
