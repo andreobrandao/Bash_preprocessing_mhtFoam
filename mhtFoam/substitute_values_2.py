@@ -34,13 +34,13 @@ def changeFileDict_2(tumor_dict):
                 scalar_name = key
                 scalar_value = value["value"]
                 #file.write(f"scalar {scalar_name} = {scalar_value};\n")
-                tumor_data_lines.append(f"scalar {scalar_name} = {scalar_value};\n")
+                tumor_data_lines.append(f"        scalar {scalar_name} = {scalar_value};\n")
        #file.write("\n")  # Linha em branco entre tumores
         tumor_data_lines.append("\n")
             
     
         
-    insertion_line = 50
+    insertion_line = 47
     lines[insertion_line:insertion_line] = tumor_data_lines
     
     with open(input_file, "w") as file:
@@ -79,11 +79,11 @@ def generate_dictionary_3(data,indexx,dir="."):
     for i in range(1, indexx+1):  # Certifique-se de iterar até indexx inclusive
         tumor_dict[f"dict{i}"] = {
             f"{dir}/0/ID": [
-                {"radius": {"exp": "{radius}", "value": data["tumors"][i-1][f"radius_{i}"]}},
-                {"eccen": {"exp": "{eccen}", "value": data["tumors"][i-1][f"eccen_{i}"]}},
-                {"posx": {"exp": "{posx}", "value": data["tumors"][i-1][f"posx_{i}"]}},
-                {"posy": {"exp": "{posy}", "value": data["tumors"][i-1][f"posy_{i}"]}},
-                {"inclination": {"exp": "{inclination}", "value": data["tumors"][i-1][f"inclination_{i}"]}},
+                {f"radius_{i}": {"exp": "{radius}", "value": data["tumors"][i-1][f"radius_{i}"]}},
+                {f"eccen_{i}": {"exp": "{eccen}", "value": data["tumors"][i-1][f"eccen_{i}"]}},
+                {f"posx_{i}": {"exp": "{posx}", "value": data["tumors"][i-1][f"posx_{i}"]}},
+                {f"posy_{i}": {"exp": "{posy}", "value": data["tumors"][i-1][f"posy_{i}"]}},
+                {f"inclination_{i}": {"exp": "{inclination}", "value": data["tumors"][i-1][f"inclination_{i}"]}},
             ]
         }
     #print(tumor_dict)
