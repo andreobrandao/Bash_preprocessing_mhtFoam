@@ -24,11 +24,15 @@ def changeFileDict(dict1):
 
 def changeFileDict_2(tumor_dict):
     input_file = "./0/ID"
+    i=0
     with open(input_file, "r") as file:
         lines = file.readlines()
     tumor_data_lines = []
+    tumor_data_lines_2=[]
     for tumor_data in tumor_dict.values():
         print(tumor_data)
+        i=i+1
+        tumor_data_lines.append(f"        //Tumor_{i}\n")
         for param in tumor_data["./0/ID"]:
             for key, value in param.items():
                 scalar_name = key
@@ -36,12 +40,24 @@ def changeFileDict_2(tumor_dict):
                 #file.write(f"scalar {scalar_name} = {scalar_value};\n")
                 tumor_data_lines.append(f"        scalar {scalar_name} = {scalar_value};\n")
        #file.write("\n")  # Linha em branco entre tumores
+       
+        tumor_data_lines.append(f"        scalar inclination_rad_{i} = inclination_{i} * pi / 180.0;\n")
+        tumor_data_lines.append(f"        scalar be_{i} = radius_{i}*pow((1-pow(eccen_{i},2)),0.25);\n")
+        tumor_data_lines.append(f"        scalar ae_{i} = pow(pow(be_{i},2)*(pow(1-pow(eccen_{i},2),-1)),0.5);\n")
         tumor_data_lines.append("\n")
             
-    
+        tumor_data_lines_2.append(f"        scalar y_rot_{i} = (y-posy_{i})*cos(inclination_rad_{i})-(x-posx_{i})* sin(inclination_rad_{i});\n")
+        tumor_data_lines_2.append(f"        scalar x_rot_{i} = (y-posy_{i})*sin(inclination_rad_{i})+(x-posx_{i})* cos(inclination_rad_{i});\n")
+        tumor_data_lines_2.append(f"                if (pow(y-posy_{i},2) <= pow(radius_{i},2)-pow(x-posx_{i},2))")
+        tumor_data_lines_2.append("                {\n")
+        tumor_data_lines_2.append("                        ID[i] = 1.;\n")
+        tumor_data_lines_2.append("                }\n")
         
     insertion_line = 47
+    insertion_line_2=insertion_line+10
     lines[insertion_line:insertion_line] = tumor_data_lines
+    lines[insertion_line_2:insertion_line_2] = tumor_data_lines_2
+    
     
     with open(input_file, "w") as file:
         file.writelines(lines)
