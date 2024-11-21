@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import simpledialog, messagebox, Tk, Frame, Label, LEFT, RIGHT, Button, Entry,font
+from substitute_values_2 import generate_dictionary_1, generate_dictionary_2, generate_dictionary_3, changeFileDict, changeFileDict_2
 
 import json
 
@@ -14,12 +15,14 @@ class Main_wind:
         altura_tela_1 = self.root_1.winfo_screenheight()
         self.largura_tela = largura_tela_1//4
         self.altura_tela = altura_tela_1//3
-        self.root_1.geometry(f'550x300+{self.largura_tela}+{self.altura_tela}')
+        self.root_1.geometry(f'550x350+{self.largura_tela}+{self.altura_tela}')
     def interface(self):
-        self.botoes_main_wind()
         self.define_titulo()
+        self.botoes_main_wind()
+        #self.define_titulo()
         self.tumor_data_entries = {}
         self.data_t = {"tumors": []}
+        self.jason_quantities = []
     def define_titulo(self):
         """
         Função responsável pela construção da parte relativa ao título na interface
@@ -52,6 +55,20 @@ v 1.0"""
         self.segundoContainer["pady"] = 20
         self.segundoContainer["padx"] = 20
         self.segundoContainer.pack()
+        
+        self.terceiroContainer = Frame(root_1)
+        self.terceiroContainer["pady"] = 20
+        self.terceiroContainer["padx"] = 20
+        self.terceiroContainer.pack()
+        
+        self.relatorio = Button(self.terceiroContainer)
+        self.relatorio["text"] = "Gerar Setup"
+        self.relatorio["font"] = self.fonteBotoes
+        self.relatorio["width"] = 12
+        
+        #self.relatorio["command"] = self.gera_setup
+        self.relatorio["command"] =self.gera_setup
+        self.relatorio.pack(side=LEFT)
         
         self.malha = Button(self.segundoContainer)
         self.malha["text"] = "Parâmetros da malha"
@@ -97,7 +114,10 @@ v 1.0"""
             self.data["endtime"] = endtime
         if timestep is not None:
             self.data["timestep"] = timestep
-        with open("inputDict_controlDict.json", "w") as arquivo:
+            
+        self.outJson3 = "inputDict_controlDict.json"
+        self.jason_quantities.append(self.outJson3)
+        with open(self.outJson3, "w") as arquivo:
             json.dump(self.data, arquivo, indent=4)
             
         messagebox.showinfo("Confirmação", "Parâmetros temporais salvos com sucesso.")
@@ -227,9 +247,7 @@ v 1.0"""
     
         json_string = json.dumps(inputDict_blockMeshDict, indent=4)
         self.outJson="inputDict_blockMeshDict.json"
-        
-        json_string = json.dumps(inputDict_blockMeshDict, indent=4)
-        self.outJson="inputDict_blockMeshDict.json"
+        self.jason_quantities.append(self.outJson)
         
         with open(self.outJson,"w") as f:
             f.write(json_string)
@@ -260,7 +278,7 @@ v 1.0"""
 
     def collect_tumor_data(self, index, tumor_count):
         
-        
+        self.current_index=index
         self.tumor_data_entries[index] = {}
         
         self.tumor_window = tk.Toplevel(self.root_1)
@@ -353,6 +371,7 @@ v 1.0"""
 
     def gera_json_tumor(self,window,index,tumor_count):
         import json
+        #self.indexx = indexx
         
         indexx=index+1
         inputDict_ID = {
@@ -364,15 +383,55 @@ v 1.0"""
         }
         
         self.data_t["tumors"].append(inputDict_ID)
+        #self.data_t.append(inputDict_ID)
         
         json_string = json.dumps(inputDict_ID, indent=4)
+        self.outJson2="inputDict_ID.json"
+        self.jason_quantities.append(self.outJson2)
         
         if len(self.data_t["tumors"]) == tumor_count:
-            with open("inputDict_ID.json", "w") as f:
+            with open(self.outJson2, "w") as f:
                 json.dump(self.data_t, f, indent=4)
             messagebox.showinfo("Confirmação", "Parâmetros de todos os tumores salvos com sucesso.")
             
         window.destroy()
+    def gera_setup(self):
+        import json
+        import os
+        #os.system("./Allpre")
+        """
+        Função utilizada para substituiçoes de valores do setup
+        """
+        # Gera o json caso o usuario se esqueça
+        self.gera_json_tumor
+        self.gera_json_malha
+        #print(self.current_index)
+        indexx=self.current_index+1
+        
+        with open(self.outJson,'r') as f:
+            data = json.load(f)
+        inputDict = generate_dictionary_2(data)
+        changeFileDict(inputDict)
+        with open(self.outJson3,'r') as f:
+            data = json.load(f)
+        inputDict = generate_dictionary_1(data)
+        changeFileDict(inputDict)
+        #for indexx in range(1,self.current_index+1):
+        with open(self.outJson2,'r') as f:
+            data = json.load(f)
+        inputDict = generate_dictionary_3(data,indexx)
+        changeFileDict_2(inputDict)
+
+    # Método para gerar o relatório
+    def simulation(self):
+        """
+        Função utilizada para geração de um relatório PDF
+        """
+        import os
+
+        os.system("./Allclean")
+        os.system("./Allpre")
+        os.system("./Allrun &")
 # Inicializa a interface gráfica
 root_1 = tk.Tk()
 app = Main_wind(root_1)
