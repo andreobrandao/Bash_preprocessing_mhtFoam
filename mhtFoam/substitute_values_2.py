@@ -48,13 +48,14 @@ def changeFileDict_2(tumor_dict):
             
         tumor_data_lines_2.append(f"        scalar y_rot_{i} = (y-posy_{i})*cos(inclination_rad_{i})-(x-posx_{i})* sin(inclination_rad_{i});\n")
         tumor_data_lines_2.append(f"        scalar x_rot_{i} = (y-posy_{i})*sin(inclination_rad_{i})+(x-posx_{i})* cos(inclination_rad_{i});\n")
-        tumor_data_lines_2.append(f"                if (pow(y-posy_{i},2) <= pow(radius_{i},2)-pow(x-posx_{i},2))")
+        tumor_data_lines_2.append(f"                if (pow(y-posy_{i},2) <= pow(radius_{i},2)-pow(x-posx_{i},2))\n")
         tumor_data_lines_2.append("                {\n")
         tumor_data_lines_2.append("                        ID[i] = 1.;\n")
         tumor_data_lines_2.append("                }\n")
+        tumor_data_lines_2.append("\n")
         
     insertion_line = 47
-    insertion_line_2=insertion_line+10
+    insertion_line_2=insertion_line+(i*10+8)
     lines[insertion_line:insertion_line] = tumor_data_lines
     lines[insertion_line_2:insertion_line_2] = tumor_data_lines_2
     
