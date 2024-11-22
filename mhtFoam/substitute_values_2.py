@@ -23,24 +23,44 @@ def changeFileDict(dict1):
         f.close()
 
 def changeFileDict_2(tumor_dict):
+
+    ## Arquivos a serem alterados
     input_file = "./0/ID"
+    input_file_2 = "./0/corr"
+    
+    ## Contar tumores
     i=0
+    
+    ## Abre arquivos
     with open(input_file, "r") as file:
         lines = file.readlines()
+    with open(input_file_2,"r") as file2:
+        lines2 = file2.readlines()
+        
+    # listas agregam alterações (Altera o ID) 
     tumor_data_lines = []
-    tumor_data_lines_2=[]
+    tumor_data_lines_2 = []
+    # Lista agrega alterações (Altera o corr)
+    fluid_data_lines = []
+    fluid_data_lines_2 = []
+    
+    ## Itera dentro de tumor_data da outra função para recuperar os dados gravados no json
     for tumor_data in tumor_dict.values():
         print(tumor_data)
         i=i+1
         tumor_data_lines.append(f"        //Tumor_{i}\n")
+        fluid_data_lines.append(f"        // fluid magnetic on tumor {i}\n")
         for param in tumor_data["./0/ID"]:
             for key, value in param.items():
                 scalar_name = key
                 scalar_value = value["value"]
-                #file.write(f"scalar {scalar_name} = {scalar_value};\n")
                 tumor_data_lines.append(f"        scalar {scalar_name} = {scalar_value};\n")
-       #file.write("\n")  # Linha em branco entre tumores
-       
+                if scalar_name == f"posx_{i}" or scalar_name == f"posy_{i}":
+                    fluid_data_lines.append(f"        scalar {scalar_name} = {scalar_value};\n")
+
+        ## Agrega as demais linhas necessárias que não são diretamente entradas
+        
+        ## ID
         tumor_data_lines.append(f"        scalar inclination_rad_{i} = inclination_{i} * pi / 180.0;\n")
         tumor_data_lines.append(f"        scalar be_{i} = radius_{i}*pow((1-pow(eccen_{i},2)),0.25);\n")
         tumor_data_lines.append(f"        scalar ae_{i} = pow(pow(be_{i},2)*(pow(1-pow(eccen_{i},2),-1)),0.5);\n")
@@ -54,15 +74,33 @@ def changeFileDict_2(tumor_dict):
         tumor_data_lines_2.append("                }\n")
         tumor_data_lines_2.append("\n")
         
+        ## corr
+        fluid_data_lines.append("\n")
+        fluid_data_lines_2.append(f"                if ( pow(y-posy_{i},2) <= pow(radius_{i},2) - pow(x-posx_{i},2) )\n")
+        fluid_data_lines_2.append("                {\n")
+        fluid_data_lines_2.append("                        corr[i] = 1.;\n")
+        fluid_data_lines_2.append("                }\n")
+    # Onde escrever nos arquivos
+    
+    ##ID
     insertion_line = 47
     insertion_line_2=insertion_line+(i*10+8)
     lines[insertion_line:insertion_line] = tumor_data_lines
     lines[insertion_line_2:insertion_line_2] = tumor_data_lines_2
     
+    ##corr
+    insertion_line_fluid = 47
+    insertion_line_2=insertion_line+(i*4+10)
+    lines2[insertion_line_fluid:insertion_line_fluid] = fluid_data_lines
+    lines2[insertion_line_2:insertion_line_2] = fluid_data_lines_2
+    
+    ## Escreve nos arquivos
     
     with open(input_file, "w") as file:
         file.writelines(lines)
-
+    with open(input_file_2, "w") as file2:
+        file2.writelines(lines2)
+    
 def generate_dictionary_1(data,dir="."): 
     #print(data["endtime"])
     dict1 = {
