@@ -5,7 +5,7 @@
 
 restore0Dir
 
-runApplication blockMesh
+cp -r ./system.orig ./system
 
 #------------------------------------------------------------------------------
 

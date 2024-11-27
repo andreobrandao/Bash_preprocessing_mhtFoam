@@ -49,7 +49,7 @@ v 1.0"""
         self.titulo["padx"]=5
         self.titulo["justify"]=tk.CENTER
     def botoes_main_wind(self):
-        # Botão malha
+        # cria os containers para posicionar os botões
 
         self.segundoContainer = Frame(root_1)
         self.segundoContainer["pady"] = 20
@@ -61,45 +61,56 @@ v 1.0"""
         self.terceiroContainer["padx"] = 20
         self.terceiroContainer.pack()
         
+        # Botão para gerar setup
+        
         self.relatorio = Button(self.terceiroContainer)
         self.relatorio["text"] = "Gerar Setup"
         self.relatorio["font"] = self.fonteBotoes
         self.relatorio["width"] = 12
-        
-        #self.relatorio["command"] = self.gera_setup
         self.relatorio["command"] =self.gera_setup
         self.relatorio.pack(side=LEFT)
+        
+        # Botão para iniciar simulação
+        
+        self.simu = Button(self.terceiroContainer)
+        self.simu["text"] = "Iniciar simulação"
+        self.simu["font"] = self.fonteBotoes
+        self.simu["width"] = 12
+        self.simu["command"] =self.simulation
+        self.simu.pack(side=RIGHT)
+        
+        #Botão para adicionar parâmetros da malha
         
         self.malha = Button(self.segundoContainer)
         self.malha["text"] = "Parâmetros da malha"
         self.malha["font"] = self.fonteBotoes
         self.malha["width"] = 20
         self.malha["pady"] = 10
-       
         self.malha["command"] = self.leitura_blockMeshDict
         self.malha.pack(side=LEFT)
         
-        # Botão tempo
+        # Botão para adicionar parâmetros temporais
         
         self.tempo = Button(self.segundoContainer)
         self.tempo["text"] = "Parâmetros temporais"
         self.tempo["font"] = self.fonteBotoes
         self.tempo["width"] = 20
-        self.tempo["pady"] = 10
-       
+        self.tempo["pady"] = 10   
         self.tempo["command"] = self.leitura_ControlDict
         self.tempo.pack(side=LEFT)
        
-        # Botão tumor
+        # Botão para adicionar parâmetros dos tumores
         
         self.tumor = Button(self.segundoContainer)
         self.tumor["text"] = "Parâmetros dos tumores"
         self.tumor["font"] = self.fonteBotoes
         self.tumor["width"] = 20
         self.tumor["pady"] = 10
-       
         self.tumor["command"] = self.tumors
         self.tumor.pack(side=RIGHT)
+        
+        #Botão Iniciar simulação
+        
         
         
     def leitura_ControlDict(self):
@@ -398,7 +409,11 @@ v 1.0"""
     def gera_setup(self):
         import json
         import os
-        #os.system("./Allpre")
+        
+        # Limpa pasta e prepara a simulação copiando arquivos da pasta 0 e system de volta
+        
+        os.system("./Allclean")
+        os.system("./Allpre")
         """
         Função utilizada para substituiçoes de valores do setup
         """
@@ -425,12 +440,12 @@ v 1.0"""
     # Método para gerar o relatório
     def simulation(self):
         """
-        Função utilizada para geração de um relatório PDF
+        Função utilizada para Iniciar simulação
         """
         import os
 
-        os.system("./Allclean")
-        os.system("./Allpre")
+        #os.system("./Allclean")
+        #os.system("./Allpre")
         os.system("./Allrun &")
 # Inicializa a interface gráfica
 root_1 = tk.Tk()
