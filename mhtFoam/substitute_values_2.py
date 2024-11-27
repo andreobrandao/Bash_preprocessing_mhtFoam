@@ -68,31 +68,31 @@ def changeFileDict_2(tumor_dict):
             
         tumor_data_lines_2.append(f"        scalar y_rot_{i} = (y-posy_{i})*cos(inclination_rad_{i})-(x-posx_{i})* sin(inclination_rad_{i});\n")
         tumor_data_lines_2.append(f"        scalar x_rot_{i} = (y-posy_{i})*sin(inclination_rad_{i})+(x-posx_{i})* cos(inclination_rad_{i});\n")
-        tumor_data_lines_2.append(f"                if (pow(y-posy_{i},2) <= pow(radius_{i},2)-pow(x-posx_{i},2))\n")
+        tumor_data_lines_2.append(f"                if ( pow(y_rot_{i},2) <= ((1 - pow(x_rot_{i},2)/pow(ae_{i},2) )*pow(be_{i},2)) )\n")
         tumor_data_lines_2.append("                {\n")
         tumor_data_lines_2.append("                        ID[i] = 1.;\n")
         tumor_data_lines_2.append("                }\n")
         tumor_data_lines_2.append("\n")
-        
+        if ( pow(y_rot2,2) <= ((1 - pow(x_rot2,2)/pow(ae2,2) )*pow(be2,2)) )
         ## corr
         fluid_data_lines.append("\n")
-        fluid_data_lines_2.append(f"                if ( pow(y-posy_{i},2) <= pow(radius_{i},2) - pow(x-posx_{i},2) )\n")
+        fluid_data_lines_2.append(f"                if ( pow(y-y_rot_{i},2) <= pow(radius_{i},2) - pow(x-x_rot_{i},2) )\n")
         fluid_data_lines_2.append("                {\n")
         fluid_data_lines_2.append("                        corr[i] = 1.;\n")
         fluid_data_lines_2.append("                }\n")
     # Onde escrever nos arquivos
     
     ##ID
-    insertion_line = 47
+    insertion_line = 48
     insertion_line_2=insertion_line+(i*10+8)
     lines[insertion_line:insertion_line] = tumor_data_lines
     lines[insertion_line_2:insertion_line_2] = tumor_data_lines_2
     
     ##corr
-    insertion_line_fluid = 47
-    insertion_line_2=insertion_line+(i*4+10)
+    insertion_line_fluid = 48
+    insertion_line_22=insertion_line_fluid+(i*4+10)
     lines2[insertion_line_fluid:insertion_line_fluid] = fluid_data_lines
-    lines2[insertion_line_2:insertion_line_2] = fluid_data_lines_2
+    lines2[insertion_line_22:insertion_line_22] = fluid_data_lines_2
     
     ## Escreve nos arquivos
     
