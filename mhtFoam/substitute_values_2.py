@@ -76,7 +76,7 @@ def changeFileDict_2(tumor_dict):
 
         ## corr
         fluid_data_lines.append("\n")
-        fluid_data_lines_2.append(f"                if ( pow(y-posy_{i},2) <= pow(radius_{i},2) - pow(x-posx_{i},2) )\n")
+        fluid_data_lines_2.append(f"                if ( pow(y-posy_{i},2) <= pow(radius_mag,2) - pow(x-posx_{i},2) )\n")
         fluid_data_lines_2.append("                {\n")
         fluid_data_lines_2.append("                        corr[i] = 1.;\n")
         fluid_data_lines_2.append("                }\n")
