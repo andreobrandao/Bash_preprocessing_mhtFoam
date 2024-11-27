@@ -43,6 +43,7 @@ internalField #codeStream
         const IOdictionary& d = static_cast<const IOdictionary&>(dict);
         const fvMesh& mesh = refCast<const fvMesh>(d.db());
         const scalar pi = 3.141592653589793;
+        scalarField ID(mesh.nCells(), 0.);
         //########### Aqui entra as informações dos tumores(raio,excentricidade,posições e inclinação)
 
         //##########
