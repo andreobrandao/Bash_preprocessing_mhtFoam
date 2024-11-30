@@ -25,7 +25,8 @@ cd ${0%/*} || exit
 runApplication blockMesh
 runApplication decomposePar
 runParallel $(getApplication)
+#runApplication $(getApplication)
 #runApplication reconstructPar
-rm -rf processor*
+#rm -rf processor*
 #------------------------------------------------------------------------------
 
