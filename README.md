@@ -1,6 +1,6 @@
 **How to run**
 
-Firtly, be sure that you have the mhtFoam solver set in your openfoam, you can find the solver in the link:
+Firstly, be sure that you have the mhtFoam solver set in your openfoam, you can find the solver in the link:
 
 https://github.com/rafaelgabler/fhdFoam
 
