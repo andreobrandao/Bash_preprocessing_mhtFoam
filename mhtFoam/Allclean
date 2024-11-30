@@ -8,6 +8,7 @@ cd "${0%/*}" || exit                            # Run from this directory
 cleanCase0
 
 # foamCleanTutorials -self    # Run recursively but avoid self
+rm -rf processor*
 rm -rf constant/polyMesh
 rm -r system
 
