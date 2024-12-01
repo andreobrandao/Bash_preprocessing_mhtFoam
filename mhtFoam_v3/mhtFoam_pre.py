@@ -8,11 +8,11 @@ from matplotlib.patches import Ellipse
 from PIL import ImageTk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-
-
 import json
 
+
 class Main_wind:
+    ## Abre a tela inicial e estabelece algumas informações a serem usadas no meio do código
     def __init__(self, root_1):
         self.root_1 = root_1
         self.root_1.title("mhtFoam")
@@ -25,6 +25,7 @@ class Main_wind:
         self.altura_tela = altura_tela_1//3
         self.root_1.geometry(f'550x350+{self.largura_tela}+{self.altura_tela}')
     def interface(self):
+        ## Aqui deixa já aberto as seguintes funções
         self.define_titulo()
         self.botoes_main_wind()
         #self.define_titulo()
@@ -43,8 +44,8 @@ class Main_wind:
         #Texto da intro do mhtFoam
         texto1= """O solver mhtFoam simula o processo de magnetohipertermia
 aplicado a tratamento de tumores. Entre com as informações
-do domínio de cáculo/malha e com as informações dos tumores
-através dos botões acima.
+do domínio de cáculo/malha, do tempo e com as informações dos tumores
+através dos botões abaixo.
 
 v 2.0"""
 
@@ -80,8 +81,6 @@ v 2.0"""
         self.simu.pack(side=RIGHT,padx=5)
         
         #Botão para adicionar parâmetros da malha
-        
-        #self.malha = Button(self.segundoContainer)
 
         self.malha = cttk.CTkButton(self.segundoContainer, text="Parâmetros da malha",
                            width=150,  # Ajustado para largura em pixels
@@ -89,8 +88,6 @@ v 2.0"""
         self.malha.pack(side=LEFT,padx=5)
         
         # Botão para adicionar parâmetros temporais
-        
-        #self.tempo = Button(self.segundoContainer)
     
         self.tempo = cttk.CTkButton(self.segundoContainer, text="Parâmetros temporais",
                            width=150,  # Ajustado para largura em pixels
@@ -105,17 +102,18 @@ v 2.0"""
         self.tumor.pack(side=RIGHT,padx=5)
         
         ## Botão para adicionar Pré-visualização
+        
         self.visu = cttk.CTkButton(self.terceiroContainer, text="Pré-visualização",
                            width=12,  # Ajustado para largura em pixels
                            height=30,corner_radius=8,command=self.visual)
         self.visu.pack(side=LEFT,padx=5)
-        
         
     def leitura_ControlDict(self):
         """
         Função responsável pela construção da parte relacionada ao controlDict
         """
         self.data={}
+        ##Abre containers para as informações a serem plotadas
         self.control=cttk.CTkToplevel(root_1)
         self.control.title("Parâmetros temporais")
         self.controlcontainer1=cttk.CTkFrame(self.control)
@@ -124,12 +122,9 @@ v 2.0"""
         self.controlcontainer2.pack(pady=10, padx=10)
         self.controlcontainer3=cttk.CTkFrame(self.control)
         self.controlcontainer3.pack(pady=10, padx=10)
-        #self.controlcontainer1.title("Parâmetros temporais")
-        
-        #endtime = simpledialog.askfloat("Parâmetros temporais", "Tempo final:", minvalue=0, maxvalue=1000)
-        #endtime = FloatInputDialog(self.controlcontainer, title="Parâmetros temporais", prompt="Tempo final: ")
         
         ##Endtime
+            
         self.endtimeLabel = cttk.CTkLabel(self.controlcontainer1, 
                               text="Tempo final (s): ")
         self.endtimeLabel.pack(side="left")
@@ -148,12 +143,13 @@ v 2.0"""
                          placeholder_text="0.1")
         self.timestep.pack(side="right")
         
-        
+        ## Botão para confirmar
         self.autenticarcontrol = cttk.CTkButton(self.controlcontainer3, text="Ok",
                            width=150,  # Ajustado para largura em pixels
                            height=40,command=self.save_control)
         self.autenticarcontrol.pack(side=RIGHT,padx=5)
-        #timestep = simpledialog.askfloat("Parâmetros temporais", "Time step:", minvalue=0, maxvalue=1000)
+    
+    ## Salva as informações entradas em self.data
     def save_control(self):
         endtime =self.endtime.get()
         timestep=self.timestep.get()
@@ -164,53 +160,51 @@ v 2.0"""
             
         self.outJson3 = "inputDict_controlDict.json"
         self.jason_quantities.append(self.outJson3)
+        ## Salva no jason
         with open(self.outJson3, "w") as arquivo:
             json.dump(self.data, arquivo, indent=4)
         
+        ## Fecha a tela
         self.control.destroy()
-        #messagebox.showinfo("Confirmação", "Parâmetros temporais salvos com sucesso.")
         
     def leitura_blockMeshDict(self):
         
         """
         Função responsável pela construção da parte relacionada ao blockMeshDict
         """
+        ## Abre a janela principal
         self.parametro_window = cttk.CTkToplevel(root_1)
         self.parametro_window.title("parâmetros do Domínio de Cálculo")
         
         # Construção do container para a entrada de xmax
-        #self.segundo2Container = Frame(self.parametro_window)
         self.segundo2Container = cttk.CTkFrame(self.parametro_window)
         self.segundo2Container.pack(pady=20, padx=20)
-        # Construção do container para a entrada de ymax
         
+        # Construção do container para a entrada de ymax
         self.terceiro2Container = cttk.CTkFrame(self.parametro_window)
         self.terceiro2Container.pack(pady=10, padx=20)
+        
         # Construção do container para a entrada de zmax
-    
         self.quarto2Container = cttk.CTkFrame(self.parametro_window)
         self.quarto2Container.pack(pady=10, padx=20)
+        
         # Construção do container para a entrada de xnode
-
         self.quinto2Container = cttk.CTkFrame(self.parametro_window)
         self.quinto2Container.pack(pady=10, padx=20)
+        
         # Construção do container para a entrada de ynode
-   
         self.sexto2Container = cttk.CTkFrame(self.parametro_window)
         self.sexto2Container.pack(pady=10, padx=20)
+        
         # Construção do container para a entrada de znode
         self.setimo2Container = cttk.CTkFrame(self.parametro_window)
         self.setimo2Container.pack(pady=10, padx=20)
+        
         # Construção do container para a entrada de endTime
-        
-        
         self.oitavo2Container = cttk.CTkFrame(self.parametro_window)
         self.oitavo2Container.pack(pady=10, padx=20)
         
-        #########################################################
-        
-        # Informação exibida ao lado do campo para entrada de xmax
-        
+        # Informação exibida para entrada de xmax
         self.xmaxLabel = cttk.CTkLabel(self.segundo2Container, 
                               text="Size of the domain in x direction (m): ")
         self.xmaxLabel.pack(side="left")
@@ -219,9 +213,7 @@ v 2.0"""
                          placeholder_text="0.09")
         self.xmax.pack(side="left")
         
-        # Informação exibida ao lado do campo para entrada de ymax
-        
-        
+        # Informação exibida para entrada de ymax
         self.ymaxLabel = cttk.CTkLabel(self.terceiro2Container, 
                               text="Size of the domain in y direction (m): ")
         self.ymaxLabel.pack(side="left")
@@ -231,8 +223,6 @@ v 2.0"""
         self.ymax.pack(side="left")
         
         # Informação exibida ao lado do campo para entrada de zmax
-        
-        
         self.zmaxLabel = cttk.CTkLabel(self.quarto2Container, 
                               text="Size of the domain in z direction (m): ")
         self.zmaxLabel.pack(side="left")
@@ -242,8 +232,6 @@ v 2.0"""
         self.zmax.pack(side="left")
         
         # Informação exibida ao lado do campo para entrada de xnode
-        
-        
         self.xnodeLabel = cttk.CTkLabel(self.quinto2Container, 
                               text="Amount of nodes in the x direction: ")
         self.xnodeLabel.pack(side="left")
@@ -253,7 +241,6 @@ v 2.0"""
         self.xnode.pack(side="right")
         
         # Informação exibida ao lado do campo para entrada de ynode
-
         self.ynodeLabel = cttk.CTkLabel(self.sexto2Container, 
                               text="Amount of nodes in the y direction: ")
         self.ynodeLabel.pack(side="left")
@@ -263,7 +250,6 @@ v 2.0"""
         self.ynode.pack(side="right")
         
         # Informação exibida ao lado do campo para entrada de znode
-        
         self.znodeLabel = cttk.CTkLabel(self.setimo2Container, 
                               text="Amount of nodes in the z direction: ")
         self.znodeLabel.pack(side="left")
@@ -271,9 +257,9 @@ v 2.0"""
                          width=300, 
                          placeholder_text="1")
         self.znode.pack(side="right")
-        #botão de gerar jason
         
-        self.autenticar = cttk.CTkButton(self.oitavo2Container, text="Gerar Json",
+        #botão de gerar jason
+        self.autenticar = cttk.CTkButton(self.oitavo2Container, text="Ok",
                            width=150,  # Ajustado para largura em pixels
                            height=40,command=self.gera_json_malha)
         self.autenticar.pack(side=RIGHT,padx=5)
@@ -281,11 +267,13 @@ v 2.0"""
     # Blocos de geração de arquivos Jason
    
     def window_destroymesh(self):
+        #Função para fechar tela após o ok ser pressionado
         self.parametro_window.destroy()
         self.confirmationmesh.destroy()
     def gera_json_malha(self):
         import json
         
+        ## Coloca no inputDict_blockMeshDict as informações coletadas
         inputDict_blockMeshDict = {}
         inputDict_blockMeshDict["xmax"] = self.xmax.get()
         inputDict_blockMeshDict["ymax"] = self.ymax.get()
@@ -293,8 +281,12 @@ v 2.0"""
         inputDict_blockMeshDict["xnode"] = self.xnode.get()
         inputDict_blockMeshDict["ynode"] = self.ynode.get()
         inputDict_blockMeshDict["znode"] = self.znode.get()
+        
+        # Aqui vai ser usado para plotar a imagem de pré-view depois
         self.xmax1=float(self.xmax.get())
         self.ymax1=float(self.ymax.get())
+        
+        ## Salva no jason
         json_string = json.dumps(inputDict_blockMeshDict, indent=4)
         self.outJson="inputDict_blockMeshDict.json"
         self.jason_quantities.append(self.outJson)
@@ -302,6 +294,8 @@ v 2.0"""
         with open(self.outJson,"w") as f:
             f.write(json_string)
         f.close()
+        
+        ## Monta o botão de confirmação e fecha as telas
         self.confirmationmesh = cttk.CTkToplevel(root_1)
             
         self.confContainermesh = cttk.CTkFrame(self.confirmationmesh)
@@ -318,29 +312,27 @@ v 2.0"""
                            width=150,  # Ajustado para largura em pixels
                            height=40,command=self.window_destroymesh)
         self.confirmationmeshbutton.pack(side=LEFT,padx=5)
-        #messagebox.showinfo("Confirmação", "Parâmetros da malha salvos com sucesso.")
         
         
-        
-    #Aqui abre as janelas para coleta dos parâmetros dos tumores
-    def tumors_number(self):
-        tumor_count = self.tumors()
-        if tumor_count is not None:
-            self.open_tumor_data_screens(tumor_count)
+    """Aqui abre as janelas para coleta dos parâmetros dos tumores"""
+    
+
+    # Tela que pergunta quantos tumores é definido aqui
     def tumors(self):
+        ## Conta quantidade de telas relativa a quantidade de tumores e fecha tela
         def submit():
             nonlocal tumor_count
             tumor_count = int(tumor_count_num.get())
             self.open_tumor_data_screens(tumor_count)
+            self.tumor_count.destroy()
         tumor_count = None
-        #self.data_t = {}
-        #self.data_t['user_data'] = ""
-        #self.data_t['tumors'] = []
+
         self.tumor_windows = []
-        #tumor_count = simpledialog.askinteger("Parâmetros dos tumores", "How many tumors?")
+        ## Abre janela
         self.tumor_count=cttk.CTkToplevel()
         self.tumor_count.title("Parâmetros dos tumores")
         
+        ## Container
         self.uniqueContainer = cttk.CTkFrame(self.tumor_count)
         self.uniqueContainer.pack(pady=10, padx=20)
         self.uniqueContainer1 = cttk.CTkFrame(self.tumor_count)
@@ -348,18 +340,15 @@ v 2.0"""
         
         self.tumor_count_numlabel = cttk.CTkLabel(self.uniqueContainer, 
                               text="How many tumors?")
-        #self.tumor_count_numlabel.title("Quantidade de tumores")
         self.tumor_count_numlabel.pack(side="left")
         
+        ## Variável de entrada que conta os tumores
         tumor_count_num = cttk.CTkEntry(self.uniqueContainer, 
                          width=300, 
                          placeholder_text="2")
         tumor_count_num.pack(side="left")
         
-        
-        #if tumor_count is not None:
-            #self.data_t['tumors'] = [None] * tumor_count
-        
+        ## Botão de ok
         self.tumorbutton = cttk.CTkButton(self.uniqueContainer1, text="Ok",
                            width=150,  # Ajustado para largura em pixels
                            height=40,command=submit)
@@ -367,6 +356,8 @@ v 2.0"""
         
         return tumor_count
         #self.open_tumor_data_screens(tumor_count_num)
+        
+    ##Aqui define em que posição da tela vai abrir e chama a função que abre as novas telas para cada tumor
     def open_tumor_data_screens(self, tumor_count):
         self.count1=int(tumor_count)
         for i in range(0,tumor_count):
@@ -375,23 +366,19 @@ v 2.0"""
             self.collect_tumor_data(i,tumor_count)
         #self.tumor_windows = []
         
-
+    ## Tela para coleta de info de tumor
     def collect_tumor_data(self, index, tumor_count):
         
         self.current_index=index
         self.tumor_data_entries[index] = {}
         
-        #self.tumor_window = tk.Toplevel(self.root_1)
-        #self.tumor_window.geometry(f'300x370+{self.largura_tela2}+{self.altura_tela2}')
-        #self.tumor_window.title(f"Tumor {index + 1} Data")
-        #self.tumor_windows.append(self.tumor_window)
-        
+        ##Abre Tela
         self.tumor_window = cttk.CTkToplevel(root_1)
         self.tumor_window.title(f"Tumor {index + 1} Data")
         self.tumor_window.geometry(f'300x370+{self.largura_tela2}+{self.altura_tela2}')
         self.tumor_windows.append(self.tumor_window)
-        #abre os containers
         
+        #abre os containers
         self.primeiro5Container = cttk.CTkFrame(self.tumor_window)
         self.primeiro5Container.pack(pady=10, padx=20)
         
@@ -414,7 +401,6 @@ v 2.0"""
         # raio,excentricidade,posição x, posição y, inclinação em graus
         
         # Campo para entrada do raio
-       
         self.radiusLabel = cttk.CTkLabel(self.primeiro5Container, 
                               text="Equivalent radius: ")
         self.radiusLabel.pack(side="left")
@@ -426,7 +412,6 @@ v 2.0"""
         
 
         # Campo para entrada da excentricidade
-     
         self.eccenLabel = cttk.CTkLabel(self.segundo5Container, 
                               text="eccentricity: ")
         self.eccenLabel.pack(side="left")
@@ -437,7 +422,6 @@ v 2.0"""
         self.tumor_data_entries[index]["eccen"] = self.eccen
         
         # Campo para entrada da posição x
-        
         self.posxLabel = cttk.CTkLabel(self.terceiro5Container, 
                               text="x position of the tumor: ")
         self.posxLabel.pack(side="left")
@@ -448,7 +432,6 @@ v 2.0"""
         self.tumor_data_entries[index]["posx"] = self.posx
         
         # Campo para entrada da posição y
-        
         self.posyLabel = cttk.CTkLabel(self.quarto5Container, 
                               text="y position of the tumor: ")
         self.posyLabel.pack(side="left")
@@ -459,7 +442,6 @@ v 2.0"""
         self.tumor_data_entries[index]["posy"] = self.posy
         
         # Campo para entrada da inclinação
-        
         self.inclinationLabel = cttk.CTkLabel(self.quinto5Container, 
                               text="Inclination of the tumor (º): ")
         self.inclinationLabel.pack(side="left")
@@ -469,15 +451,11 @@ v 2.0"""
         self.inclination.pack(side="left")
         self.tumor_data_entries[index]["inclination"] = self.inclination
         
-        
-        self.autenticar_tumor = cttk.CTkButton(self.sexto5Container, text="Gerar Json",
+        ## Botão de ok
+        self.autenticar_tumor = cttk.CTkButton(self.sexto5Container, text="Ok",
                            width=150,  # Ajustado para largura em pixels
                            height=40,command=lambda win=self.tumor_window, idx=index, total=tumor_count:                      self.gera_json_tumor(win, idx, total))
         self.autenticar_tumor.pack(side=LEFT,padx=5)
-        # Chamada da função utilizada para geraçao do json
- 
-        #self.autenticar_tumor["command"] = lambda win=self.tumor_window, idx=index, total=tumor_count: self.gera_json_tumor(win, idx, total)
-        #self.autenticar_tumor.pack(side=LEFT)
     
     #Função associada à fechar as telas de entrada dos parâmetros dos tumores
     def window_destroy(self):
@@ -486,10 +464,12 @@ v 2.0"""
             self.tumor_count.destroy()
             
     def gera_json_tumor(self,window,index,tumor_count):
+        """Aqui salva os dados dos tumores no arquivo jason"""
         import json
         #self.indexx = indexx
         
         indexx=index+1
+        ## Salva os dados coletados em inputDict_ID
         inputDict_ID = {
             f"radius_{indexx}": self.tumor_data_entries[index]["radius"].get(),
             f"eccen_{indexx}": self.tumor_data_entries[index]["eccen"].get(),
@@ -498,17 +478,24 @@ v 2.0"""
             f"inclination_{indexx}": self.tumor_data_entries[index]["inclination"].get()
         }
         
+        ##Salva em self.data
         self.data_t["tumors"].append(inputDict_ID)
         #self.data_t.append(inputDict_ID)
         
         json_string = json.dumps(inputDict_ID, indent=4)
         self.outJson2="inputDict_ID.json"
         self.jason_quantities.append(self.outJson2)
+        
         #Abaixo fecha as janelas onde entramos com os dados dos tumores a medida que clica-se "Gerar Json"
-        #A última tela gera uma janela de confirmação
+        #A última tela gera uma janela de confirmação e só ela que gera a mensagem de confirmação
+        
+        ##Salva no jason
         if len(self.data_t["tumors"]) == tumor_count:
             with open(self.outJson2, "w") as f:
                 json.dump(self.data_t, f, indent=4)
+            
+            
+            ##Abre janela de confirmação e containers
             self.confirmation = cttk.CTkToplevel(root_1)
             
             self.confContainer = cttk.CTkFrame(self.confirmation)
@@ -521,6 +508,7 @@ v 2.0"""
                               text="Parâmetros de todos os tumores salvos com sucesso.")
             self.confirmationLabel.pack(side="left")
             
+            ## Botão de ok
             self.confirmationbutton = cttk.CTkButton(self.confContainer1, text="Ok",
                            width=150,  # Ajustado para largura em pixels
                            height=40,command=self.window_destroy)
@@ -530,6 +518,9 @@ v 2.0"""
 
         
     def gera_setup(self):
+    """Aqui gera o setup"""
+    ## Gerar o setup é substituir os dados coletados nos respectivos arquivos
+    
         import json
         import os
         
@@ -537,15 +528,14 @@ v 2.0"""
         
         os.system("./Allclean")
         os.system("./Allpre")
-        """
-        Função utilizada para substituiçoes de valores do setup
-        """
+        
         # Gera o json caso o usuario se esqueça
         self.gera_json_tumor
         self.gera_json_malha
-        #print(self.current_index)
+
         indexx=self.current_index+1
         
+        ## Aqui chama o outro arquivo substitute_values_2 e altera os arquivos de acordo com as funções de lá
         with open(self.outJson,'r') as f:
             data = json.load(f)
         inputDict = generate_dictionary_2(data)
@@ -560,26 +550,24 @@ v 2.0"""
         inputDict = generate_dictionary_3(data,indexx)
         changeFileDict_2(inputDict)
 
-    # Método para gerar o relatório
     def visual(self):
+        """Aqui é a função de pré visualização da configuração escolhida"""
+        
+        ##Abre janela
         visuwind = cttk.CTkToplevel(root_1)
         visuwind.title("pré visualizar")
         
+        ##Define configurações de onde vai ser plotado
         fig = Figure(figsize=(5, 5), dpi=100)
         ax = fig.add_subplot(111)
-    
-    # Example tumor data visualization
+        
+        ##Título e labels
         ax.set_title("Tumors Configuration")
-        ax.set_xlabel("X axis (m)")
-        ax.set_ylabel("Y axis (m)")
+        ax.set_xlabel("X size (m)")
+        ax.set_ylabel("Y size (m)")
         ax.set_aspect('equal')
         
-        xt=[]
-        yt=[]
-        anglet=[]
-        radiust=[]
-        eccent=[]
-        
+        ## Coloca grid
         ax.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray', alpha=0.7)
         
         try:
@@ -591,7 +579,7 @@ v 2.0"""
                 eccen = float(tumor[f"eccen_{i}"])
                 inclination = float(tumor[f"inclination_{i}"])
 
-            # Gerando a elipse
+            # Gerando a forma
                 t = np.linspace(0, 2 * np.pi, 100)
                 ellipse_x = radius/(np.sqrt(1-eccen**2)) * np.cos(t)
                 ellipse_y = radius * np.sin(t)
@@ -600,23 +588,27 @@ v 2.0"""
                 
             
             # Rotação da elipse
+                ##Tumor
                 x_rot = posx +ellipse_x*np.cos(np.radians(inclination))-ellipse_y*np.sin(np.radians(inclination))
                 y_rot = posy +ellipse_x*np.sin(np.radians(inclination))+ellipse_y*np.cos(np.radians(inclination))
+                ##Fluido magnético
                 x_mag= posx+ellipse_xmag
                 y_mag= posy+ellipse_ymag
-            # Plotando o tumor
+            # Plotando o tumor e o fluido
                 ax.fill(x_rot, y_rot, color='blue', label=f"Tumor {i} at ({posx}, {posy})")
                 ax.fill(x_mag, y_mag, color='black', label=f"Tumor {i} at ({posx}, {posy})")
-
+                
+        ## Coloquei aqui porque só o try dá erro, complemento do try
         except KeyError as item:
             print(f"Erro: Não achei o item {item} no dicionário de tumores.")
         
 
  
-    
-        ax.set_xlim(0, self.xmax1)  # Adjust limits as needed
+        ##Define os limites de acordo com os dados entrados para o blockMeshDict
+        ax.set_xlim(0, self.xmax1)
         ax.set_ylim(0, self.ymax1)
-    
+        
+        ##Desenha a imagem
         canvas = FigureCanvasTkAgg(fig, visuwind)
         canvas.draw()
         canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
@@ -627,10 +619,8 @@ v 2.0"""
         Função utilizada para Iniciar simulação
         """
         import os
-
-        #os.system("./Allclean")
-        #os.system("./Allpre")
         os.system("./Allrun &")
+        
 # Inicializa a interface gráfica
 root_1 = cttk.CTk()
 app = Main_wind(root_1)

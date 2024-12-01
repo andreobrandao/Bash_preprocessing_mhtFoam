@@ -9,14 +9,9 @@ def changeFileDict(dict1):
         #print(entrie)
         dfile = dict1[file]
         for entrie_line in dfile:
-            #print(entrie_line)
             for key in entrie_line:
                     exp = entrie_line[key]["exp"]
                     value = entrie_line[key]["value"]
-                    #print(entrie_line)
-                    #print(key)
-                    #print(entrie_line[key]["exp"])
-                    #print(entrie_line[key]["value"])
                     entrie = re.sub(rf'{exp}', str(value), entrie)
         with open(file,"w") as f:
             f.write(entrie)
@@ -46,10 +41,12 @@ def changeFileDict_2(tumor_dict):
     
     ## Itera dentro de tumor_data da outra função para recuperar os dados gravados no json
     for tumor_data in tumor_dict.values():
-        print(tumor_data)
+        #print(tumor_data)
         i=i+1
+        ## pra identificar os dados de cada tumor
         tumor_data_lines.append(f"        //Tumor_{i}\n")
         fluid_data_lines.append(f"        // fluid magnetic on tumor {i}\n")
+        ##Aqui modifica os dados que foram entrados diretamento com o usuário
         for param in tumor_data["./0/ID"]:
             for key, value in param.items():
                 scalar_name = key
@@ -80,8 +77,8 @@ def changeFileDict_2(tumor_dict):
         fluid_data_lines_2.append("                {\n")
         fluid_data_lines_2.append("                        corr[i] = 1.;\n")
         fluid_data_lines_2.append("                }\n")
+        
     # Onde escrever nos arquivos
-    
     ##ID
     insertion_line = 48
     insertion_line_2=insertion_line+(i*10+8)
@@ -141,20 +138,5 @@ def generate_dictionary_3(data,indexx,dir="."):
                 {f"inclination_{i}": {"exp": "{inclination}", "value": data["tumors"][i-1][f"inclination_{i}"]}},
             ]
         }
-    #print(tumor_dict)
+
     return tumor_dict
-    #print(data)
-    #dict1 = {
-     #   f"{dir}/0/ID":
-      #  [
-       #      {"radius":{"exp":"{radius}","value":data["tumors"][index][f"radius_{indexx}"]}},
-        #     {"eccen":{"exp":"{eccen}","value":data["tumors"][index][f"eccen_{indexx}"]}},
-         #    {"posx":{"exp":"{posx}","value":data["tumors"][index][f"posx_{indexx}"]}},
-         #    {"posy":{"exp":"{posy}","value":data["tumors"][index][f"posy_{indexx}"]}},
-         #    {"inclination":{"exp":"{inclination}","value":data["tumors"][index][f"inclination_{indexx}"]}}
-        #]
-    #}
-    print(tumor_dict)
-    
-    
-#changeFileDict(dict1)
