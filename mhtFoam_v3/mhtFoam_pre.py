@@ -518,37 +518,36 @@ v 2.0"""
 
         
     def gera_setup(self):
-    """Aqui gera o setup"""
-    ## Gerar o setup é substituir os dados coletados nos respectivos arquivos
-    
-        import json
-        import os
+    	"""
+    	Aqui gera o setup"""
+    	## Gerar o setup é substituir os dados coletados nos respectivos arquivos
+    	import json
+    	import os
         
         # Limpa pasta e prepara a simulação copiando arquivos da pasta 0 e system de volta
-        
-        os.system("./Allclean")
-        os.system("./Allpre")
+    	os.system("./Allclean")
+    	os.system("./Allpre")
         
         # Gera o json caso o usuario se esqueça
-        self.gera_json_tumor
-        self.gera_json_malha
+    	self.gera_json_tumor
+    	self.gera_json_malha
 
-        indexx=self.current_index+1
+    	indexx=self.current_index+1
         
         ## Aqui chama o outro arquivo substitute_values_2 e altera os arquivos de acordo com as funções de lá
-        with open(self.outJson,'r') as f:
+    	with open(self.outJson,'r') as f:
             data = json.load(f)
-        inputDict = generate_dictionary_2(data)
-        changeFileDict(inputDict)
-        with open(self.outJson3,'r') as f:
+    	inputDict = generate_dictionary_2(data)
+    	changeFileDict(inputDict)
+    	with open(self.outJson3,'r') as f:
             data = json.load(f)
-        inputDict = generate_dictionary_1(data)
-        changeFileDict(inputDict)
+    	inputDict = generate_dictionary_1(data)
+    	changeFileDict(inputDict)
         #for indexx in range(1,self.current_index+1):
-        with open(self.outJson2,'r') as f:
+    	with open(self.outJson2,'r') as f:
             data = json.load(f)
-        inputDict = generate_dictionary_3(data,indexx)
-        changeFileDict_2(inputDict)
+    	inputDict = generate_dictionary_3(data,indexx)
+    	changeFileDict_2(inputDict)
 
     def visual(self):
         """Aqui é a função de pré visualização da configuração escolhida"""
