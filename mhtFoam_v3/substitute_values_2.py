@@ -1,6 +1,7 @@
 import re
 import json
 
+# Modifica o blockMeshDict e o controlDict
 def changeFileDict(dict1):
     for file in dict1.keys():
         with open(file,"r") as f:
@@ -17,6 +18,7 @@ def changeFileDict(dict1):
             f.write(entrie)
         f.close()
 
+# Modifica o ID e o corr
 def changeFileDict_2(tumor_dict):
 
     ## Arquivos a serem alterados
