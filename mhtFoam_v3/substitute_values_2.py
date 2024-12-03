@@ -99,7 +99,8 @@ def changeFileDict_2(tumor_dict):
         file.writelines(lines)
     with open(input_file_2, "w") as file2:
         file2.writelines(lines2)
-    
+
+# Estabelece a relação do que modificar com o valor a ser modificado para o controlDict
 def generate_dictionary_1(data,dir="."): 
     #print(data["endtime"])
     dict1 = {
@@ -112,7 +113,8 @@ def generate_dictionary_1(data,dir="."):
          
     } 
     return dict1
-    
+
+# Estabelece a relação do que modificar com o valor a ser modificado para o blockMeshDict
 def generate_dictionary_2(data,dir="."):
     dict1 = {
         f"{dir}/system/blockMeshDict":
@@ -127,6 +129,7 @@ def generate_dictionary_2(data,dir="."):
     }
     return dict1
 
+# Estabelece a relação do que modificar com o valor a ser modificado para o ID
 def generate_dictionary_3(data,indexx,dir="."):
     #print(index)
     tumor_dict = {}
